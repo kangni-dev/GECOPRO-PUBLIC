@@ -1,44 +1,37 @@
-DROP TABLE IF EXISTS Ventes;
-DROP TABLE IF EXISTS Factures;
-DROP TABLE IF EXISTS Achats;
-DROP TABLE IF EXISTS Mets;
-DROP TABLE IF EXISTS Restaurants;
-DROP TABLE IF EXISTS Clients;
+CREATE DATABASE IF NOT EXISTS gecodb;
+USE gecodb;
+DROP TABLE IF EXISTS Etablissements;
+DROP TABLE IF EXISTS Utilisateurs;
+DROP TABLE IF EXISTS Roles;
 
+CREATE TABLE  Roles(
+    id_role char(5),
+    nom_role varchar(20),
+    desc_role varchar(50),
+    UNIQUE (nom_role),
+    PRIMARY KEY (id_role)
+);
+CREATE TABLE Utilisateurs(
+    id_utilisateur int AUTO_INCREMENT,
+    nom_utilisateur varchar(20),
+    prenom_utilisateur varchar(20),
+    courriel_utilisateur varchar(20),
+    telephone_utilisateur varchar(20),
+    role_utilisateur varchar(20),
+    mot_de_passe varchar(20),
+    adresse_utilisateur varchar(20),
+    PRIMARY KEY (id_utilisateur),
+    FOREIGN KEY (role_utilisateur) REFERENCES Roles(id_role)
 
+);
 
+CREATE TABLE Etablissements(
+    id_etab int AUTO_INCREMENT,
+    nom_etab varchar(50),
+    adresse_etab varchar(50),
+    tel_etab varchar(50),
+    ville_etab varchar(50),
+    pays_etab varchar(50),
+    PRIMARY KEY (id_etab)
+);
 
-
-
-CREATE TABLE Clients (cid integer, nom char(20), age integer, ville char(20), PRIMARY KEY(cid));
-INSERT INTO Clients VALUES (0,'Alice Blanc',27,'Limoilou'),(1,'Bob Blanc',52,'Sainte-Foy'),(2,'Cyril Bouchard',44,'Sillery'),(3,'Denise Bouchard',22,'Sainte-Foy'),(4,'Evelyne Tremblay',34,'Beauport'),(5,'Frank Verret',45,'Limoilou'),(6,'Gaston Verret',33,'Sainte-Foy'),(7,'Henri Blanc',53,'Cap-Rouge'),(8,'Irene Bouchard',44,'Cap-Rouge'),(9,'Jacob Tremblay',23,'Cap-Rouge'),(10,'Kevin Bouchard',42,'Sillery'),(11,'Laurent Blanc',41,'Limoilou'),(12,'Manon Smith',45,'Sainte-Foy'),(13,'Nicole Smith',60,'Sillery'),(14,'Olivia Smith',34,'Cap-Rouge'),(15,'Pierre Verret',47,'Sillery'),(16,'Quantin Bouchard',35,'Sainte-Foy'),(17,'Ronald Blanc',40,'Cap-Rouge'),(18,'Sylvie Blanc',37,'Limoilou'),(19,'Thomas Smith',24,'Limoilou'),(20,'Ulysse Tremblay',27,'Sainte-Foy'),(21,'Victoria Blanc',23,'Limoilou'),(22,'Wilson Tremblay',56,'Sainte-Foy'),(23,'Xeno Bouchard',31,'Limoilou'),(24,'Yvette Smith',56,'Cap-Rouge'),(25,'Zorro Tremblay',51,'Beauport');
-CREATE TABLE Restaurants (rid integer, nom char(20), ville char(20), PRIMARY KEY(rid));
-INSERT INTO Restaurants VALUES (0,'Bread Pitt','Sainte-Foy'),(1,'Pita Pan','Cap-Rouge'),(2,'Life of Pie','Sillery'),(3,'Frying Nemo','Sainte-Foy'),(4,'The Codfather','Sillery'),(5,'Tequila Mockingbird','Limoilou'),(6,'Pub Fiction','Limoilou'),(7,'Jurassic Pork','Beauport');
-CREATE TABLE Mets (mid integer, nom char(35), prix integer, rid integer, PRIMARY KEY(mid), FOREIGN KEY (rid) REFERENCES Restaurants(rid));
-INSERT INTO Mets VALUES (0,'Plat de saumon sur le grill',63,6),(1,'Assiette de tofu bouillie',3,5),(2,'Bol de porc sur le grill',2,6),(3,'Bol de porc au four',100,5),(4,'Assiette de porc au four',65,2),(5,'Bol de tofu bouillie',22,2),(6,'Bol de porc en tartare',33,7),(7,'Wok de saumon sur le grill',59,5),(8,'Wok de porc au four',12,0),(9,'Plat de saumon bouillie',99,3),(10,'Plat de tofu au four',64,5),(11,'Plat de tofu au four',47,0),(12,'Plat de tofu en tartare',66,4),(13,'Plat de porc sur le grill',25,6),(14,'Plat de tofu sur le grill',75,0),(15,'Bol de tofu en tartare',63,2),(16,'Bol de tofu sur le grill',9,6),(17,'Bol de tofu en tartare',70,3),(18,'Plat de saumon en tartare',47,4),(19,'Assiette de saumon bouillie',70,2),(20,'Plat de porc en tartare',34,6),(21,'Wok de porc au four',63,1),(22,'Plat de boeuf au four',15,6),(23,'Plat de porc bouillie',73,1),(24,'Assiette de tofu au four',90,2),(25,'Bol de saumon bouillie',67,2),(26,'Bol de tofu au four',83,6),(27,'Bol de saumon au four',24,7),(28,'Bol de porc au four',69,2),(29,'Assiette de tofu sur le grill',70,6),(30,'Plat de porc au four',53,5),(31,'Assiette de boeuf au four',18,2),(32,'Assiette de boeuf sur le grill',67,6),(33,'Plat de porc au four',41,2),(34,'Plat de tofu au four',24,2),(35,'Plat de boeuf sur le grill',34,5),(36,'Plat de boeuf en tartare',80,2),(37,'Plat de saumon sur le grill',82,3),(38,'Plat de porc au four',89,4),(39,'Bol de tofu bouillie',5,6),(40,'Plat de tofu au four',2,6),(41,'Bol de tofu bouillie',14,5),(42,'Plat de tofu en tartare',29,0),(43,'Plat de tofu au four',47,2),(44,'Plat de porc bouillie',64,0),(45,'Assiette de porc sur le grill',30,1),(46,'Assiette de saumon au four',29,3),(47,'Wok de porc en tartare',79,1),(48,'Assiette de tofu en tartare',61,5),(49,'Bol de porc bouillie',82,4),(50,'Bol de porc au four',81,3),(51,'Assiette de tofu sur le grill',8,7),(52,'Bol de saumon bouillie',69,2),(53,'Bol de boeuf sur le grill',4,1),(54,'Bol de tofu bouillie',69,3),(55,'Assiette de porc bouillie',79,4),(56,'Bol de tofu sur le grill',27,4),(57,'Bol de boeuf au four',68,5),(58,'Bol de porc en tartare',24,1),(59,'Plat de tofu bouillie',18,2),(60,'Assiette de porc au four',38,0),(61,'Plat de tofu bouillie',59,6),(62,'Plat de boeuf au four',39,1),(63,'Wok de tofu bouillie',98,3),(64,'Bol de porc au four',49,5),(65,'Plat de porc au four',33,7),(66,'Plat de saumon au four',40,2),(67,'Bol de tofu bouillie',62,6),(68,'Wok de tofu au four',93,2),(69,'Bol de porc bouillie',63,3),(70,'Assiette de porc au four',42,4),(71,'Assiette de porc sur le grill',82,2),(72,'Plat de tofu en tartare',69,5),(73,'Assiette de porc au four',83,1),(74,'Wok de porc sur le grill',96,0),(75,'Bol de porc en tartare',77,2),(76,'Plat de porc au four',18,6),(77,'Bol de tofu au four',17,1),(78,'Bol de tofu bouillie',67,5),(79,'Bol de porc sur le grill',73,5),(80,'Assiette de tofu bouillie',38,6),(81,'Bol de tofu au four',38,1),(82,'Bol de porc sur le grill',3,3),(83,'Plat de boeuf en tartare',34,6),(84,'Assiette de tofu au four',78,5),(85,'Assiette de porc bouillie',14,1),(86,'Wok de porc sur le grill',75,5),(87,'Bol de tofu sur le grill',2,2),(88,'Bol de porc bouillie',69,7),(89,'Plat de tofu en tartare',71,3),(90,'Bol de saumon sur le grill',95,7),(91,'Bol de saumon bouillie',72,1),(92,'Assiette de tofu sur le grill',20,1),(93,'Bol de tofu sur le grill',50,1),(94,'Bol de tofu bouillie',29,5),(95,'Assiette de saumon au four',9,4),(96,'Assiette de tofu au four',81,5),(97,'Plat de porc bouillie',36,0),(98,'Plat de porc au four',50,1),(99,'Wok de porc au four',99,2);
-CREATE TABLE Achats (cid integer, mid integer, quantite integer, dateachat date, FOREIGN KEY (cid) REFERENCES Clients(cid), FOREIGN KEY (mid) REFERENCES Mets(mid));
-INSERT INTO Achats VALUES (3,0,3,'2022-8-25'),(18,0,3,'2012-4-11'),(10,52,2,'2013-6-20'),(9,79,3,'2017-5-12'),(21,64,3,'2015-11-7'),(15,64,2,'2014-5-27'),(5,28,5,'2014-5-17'),(1,43,3,'2018-12-6'),(2,99,4,'2017-12-23'),(21,36,4,'2015-8-13'),(2,1,1,'2018-8-14'),(14,86,5,'2019-1-6'),(11,61,5,'2019-9-26'),(6,28,1,'2021-11-7'),(1,60,1,'2017-3-27'),(4,73,2,'2018-4-10'),(18,59,1,'2012-10-15'),(11,49,1,'2019-10-15'),(11,53,1,'2014-1-25'),(17,74,2,'2014-9-20'),(0,77,4,'2017-9-26'),(16,24,5,'2014-9-1'),(1,81,5,'2012-5-10'),(7,66,2,'2022-10-19'),(5,64,2,'2017-11-15'),(13,42,5,'2021-9-2'),(15,86,2,'2022-7-10'),(9,90,2,'2018-11-14'),(18,17,2,'2018-8-23'),(10,10,2,'2016-3-23'),(1,85,2,'2013-4-25'),(6,54,2,'2017-10-12'),(13,26,2,'2016-5-7'),(6,90,3,'2016-1-9'),(1,4,4,'2020-2-25'),(22,55,4,'2016-1-22'),(15,81,2,'2017-5-9'),(4,68,4,'2020-10-2'),(10,47,4,'2018-1-25'),(3,24,2,'2016-10-12'),(3,60,4,'2013-9-6'),(17,2,3,'2019-12-19'),(10,68,3,'2019-10-20'),(19,62,1,'2012-7-21'),(16,30,4,'2015-5-16'),(19,2,1,'2018-6-18'),(22,53,2,'2012-11-17'),(21,49,5,'2014-12-7'),(14,54,4,'2012-9-19'),(4,93,1,'2019-7-18'),(21,73,2,'2019-10-5'),(2,26,2,'2019-10-2'),(2,35,4,'2018-7-12'),(2,25,4,'2013-10-12'),(11,35,3,'2014-2-7'),(14,24,2,'2017-2-25'),(18,77,2,'2019-9-5'),(18,56,4,'2012-10-22'),(17,63,4,'2022-12-12'),(9,87,2,'2021-5-2'),(20,53,2,'2020-7-1'),(22,16,1,'2019-1-11'),(4,31,3,'2019-6-3'),(19,74,2,'2014-9-15'),(2,57,4,'2012-3-16'),(14,96,3,'2022-11-4'),(20,94,4,'2022-7-4'),(8,79,1,'2018-5-15'),(7,55,4,'2013-12-26'),(1,67,4,'2014-1-24'),(14,20,3,'2020-8-1'),(18,41,3,'2014-12-3'),(8,19,1,'2021-9-11'),(10,76,5,'2015-10-16'),(3,39,4,'2013-10-18'),(12,77,4,'2021-5-20'),(10,8,3,'2016-4-10'),(20,37,3,'2019-4-25'),(9,76,2,'2017-1-3'),(8,62,3,'2013-4-14'),(13,74,3,'2020-1-10'),(18,29,3,'2015-3-10'),(9,24,4,'2018-3-11'),(18,97,1,'2019-5-28'),(6,68,3,'2018-1-19'),(22,43,1,'2018-8-19'),(2,40,3,'2014-10-3'),(17,92,3,'2019-4-28'),(10,33,4,'2019-5-25'),(7,51,1,'2012-2-15'),(23,43,1,'2014-6-4'),(19,25,1,'2018-9-20'),(17,63,2,'2018-8-6'),(11,82,4,'2020-6-8'),(22,62,4,'2017-7-6'),(2,57,4,'2021-3-24'),(21,55,5,'2020-4-27'),(20,98,5,'2021-12-7'),(16,67,3,'2018-5-21'),(2,53,2,'2020-5-7'),(1,62,5,'2014-10-13'),(3,89,5,'2019-5-26'),(17,33,4,'2017-1-23'),(12,81,5,'2014-4-6'),(7,56,1,'2017-3-6'),(14,4,1,'2021-2-24'),(15,36,3,'2014-9-11'),(23,79,2,'2015-11-6'),(7,11,3,'2012-12-7'),(1,2,4,'2016-8-21'),(19,91,2,'2021-3-7'),(6,6,2,'2016-6-12'),(5,11,2,'2014-2-3'),(14,69,2,'2015-10-5'),(15,10,2,'2017-1-27'),(7,43,4,'2019-11-1'),(3,9,4,'2018-6-24'),(8,47,4,'2017-11-19'),(2,61,2,'2016-6-2'),(14,72,3,'2019-11-26'),(12,8,2,'2017-9-8'),(20,48,2,'2013-4-10'),(15,41,5,'2013-2-4'),(24,59,3,'2016-2-6'),(18,13,3,'2016-6-7'),(7,13,4,'2015-7-16'),(21,47,3,'2017-2-22'),(16,7,4,'2013-11-10'),(19,26,5,'2017-5-2'),(3,33,1,'2014-9-1'),(9,25,5,'2021-5-17'),(14,6,1,'2017-11-12'),(7,10,1,'2017-11-13'),(8,27,2,'2020-4-5'),(10,98,2,'2014-10-5'),(16,44,1,'2014-9-26'),(16,80,5,'2016-8-8'),(7,8,1,'2022-5-2'),(25,1,3,'2013-2-26'),(9,68,5,'2020-10-26'),(23,44,3,'2020-11-9'),(4,67,2,'2021-11-4'),(24,5,2,'2016-1-15'),(12,96,4,'2016-9-2'),(16,58,3,'2014-8-17'),(12,16,4,'2017-11-10'),(10,43,1,'2015-4-23'),(5,93,4,'2016-11-28'),(23,14,2,'2015-10-7'),(17,48,2,'2021-5-14'),(17,57,5,'2012-11-23'),(6,32,3,'2014-3-19'),(14,52,4,'2013-9-8'),(14,55,1,'2015-6-4'),(11,62,3,'2021-2-5'),(2,57,3,'2018-12-12'),(3,53,5,'2014-6-6'),(6,96,5,'2020-11-19'),(7,4,4,'2016-6-5'),(2,33,1,'2020-5-21'),(20,35,4,'2015-3-2'),(19,70,1,'2014-8-2'),(3,56,2,'2016-4-17'),(2,95,4,'2013-2-26'),(9,35,3,'2021-11-2'),(1,28,3,'2016-11-5'),(13,89,5,'2020-5-24'),(9,96,2,'2015-2-10'),(7,61,2,'2018-4-19'),(25,25,2,'2016-7-28'),(22,47,3,'2012-1-6'),(21,93,5,'2015-7-5'),(12,32,3,'2014-11-6'),(14,9,3,'2017-7-19'),(16,83,2,'2013-1-23'),(12,71,2,'2014-10-4'),(4,93,4,'2020-8-26'),(17,19,2,'2017-8-3'),(8,76,3,'2016-7-27'),(1,5,3,'2013-10-16'),(7,33,3,'2012-2-17'),(22,12,2,'2021-10-14'),(22,59,2,'2016-2-21'),(3,92,4,'2016-5-25'),(6,42,3,'2018-9-13'),(10,60,4,'2018-11-12'),(20,44,2,'2020-11-24'),(17,87,3,'2021-2-14'),(2,33,3,'2019-8-9'),(19,22,4,'2016-6-14'),(12,26,3,'2017-10-2'),(17,83,1,'2012-8-20'),(17,88,1,'2022-8-28'),(6,13,4,'2017-6-23'),(2,71,2,'2020-11-27'),(15,32,5,'2021-1-22'),(0,23,2,'2017-4-27'),(8,44,5,'2014-3-5'),(3,37,3,'2021-5-19'),(23,90,2,'2013-6-2');
-CREATE TABLE Factures (cnom char(20), rnom char(20), total integer);
-CREATE TABLE Ventes (mnom char(35), rnom char(20), quantite integer);
-
-/*---reponse**/
-SELECT nom FROM Clients WHERE cid=18;
-/***Trouvez la quantité moyenne de plats dans un achat par le client ayant le ID 14**/
-
-SELECT AVG(quantite) FROM Achats WHERE cid=14;
-
-/**Trouvez le nom du client le plus jeune parmi ceux qui ont plus de 30 ans.*/
-SELECT nom FROM Clients WHERE age=(SELECT MIN(age) From Clients WHERE  (age>30));
-
-/*Trouvez le nombre de mets offerts exactement 2 fois*/
-SELECT COUNT(*) FROM (SELECT co FROM (SELECT COUNT(mid) as co FROM  Mets GROUP BY nom) as DMETS WHERE co=2) AS DDMETS;
-
-/**Trouvez la quantité d’Assiette de porc au four qui ont été achetées.*/
-
- /*Trouvez le nom des restaurants qui offrent deux mets au même prix, en ordre alphabétique.
-   Attention, chaque nom de restaurant doit apparaitre une seule fois!**/
-
-SELECT nom,prix,rid FROM Mets ;
-SELECT COUNT(rid),nom FROM Mets GROUP BY nom ;
-
-/*Trouvez le nom du restaurant qui offre le plus de mets**/
