@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container mx-auto ">
+    <div class="card text-center">
+        <div class="card-header">
+            GECOPY-S'ENREGISTRER
+        </div>
+        <div class="card-body">
+
+
+            <form action="register" method="post" autocomplete="off">
+                <div class="">{{ msg }}</div>
+                <div class=" row mb-3">
+
+                    <label for="username" class="col-sm-2 ">Nom</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="username" placeholder="Entrez votre nom" class="form-control"
+                               id="username" required>
+                    </div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="firstname" class="col-sm-2 ">Prenom</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="firstname" placeholder="Entrez votre prenom" class="form-control"
+                               id="firstname" required>
+                    </div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="phone" class="col-sm-2 ">Telephone</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="phone" placeholder="Entrez votre prenom" class="form-control"
+                               id="phone">
+                    </div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="noCivique" class="col-sm-2 ">Numero civique</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="noCivique" placeholder="Entrer votre numero civique"
+                               class="form-control" id="noCivique" required></div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="rue" class="col-sm-2 ">Rue</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="rue" placeholder="Entrer votre rue" class="form-control" id="rue"
+                               required></div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="city" class="col-sm-2 ">Ville</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="city" placeholder="Entrer votre ville" class="form-control" id="city"
+                               required></div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="country" class="col-sm-2 ">Pays</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="country" placeholder="Entrer votre pays" class="form-control"
+                               id="country" required></div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="userRole" class="col-sm-2 ">Role</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" name = "userRole" aria-label="Role">
+                            {%  for role in roles %}
+                            <option >{{ role }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    </br></br>
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="email" class="col-sm-2 ">Courriel</label>
+                    <div class="col-sm-10">
+                        <input type="email" name="email" class="form-control" id="email"></div>
+
+                </div>
+                <div class=" row mb-3">
+
+                    <label for="password" class="col-sm-2 ">Mot de passe</label>
+                    <div class="col-sm-10">
+                        <input type="password" name="password" placeholder="Entrer votre mot de passe"
+                               class="form-control" id="password" required></div>
+                    </br></br>
+                </div>
+
+
+                <div class=" row mb-3">
+                    <button type="submit" name="soumettre" class=" w-sm-50 w-50 mx-auto btn btn-success">Se connecter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+
+
+
+    {% if message %}
+        <div id="cadre">{{ message }}"</div>
+    {% endif %}
+{% endblock %}
+</div>

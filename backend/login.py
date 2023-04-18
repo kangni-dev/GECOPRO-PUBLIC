@@ -1,11 +1,22 @@
-from flask import Flask, render_template, request
+import re
+
+from flask import Flask, render_template, request, session, redirect, url_for
 import pymysql, pymysql.cursors
 import mysql.connector
 import os
+import datetime
+from flask import request
 
 
 app = Flask(__name__)
+
+app.secret_key = 'my_secret_key'
 ProfileUtilisateur = {}
+msg = ""
+url = "main"
+connectionAction = "Se connecter"
+dbConnection = None
+
 class DBManagerDev:
     def __init__(self, database='gecodb', host="localhost", user="root"):
 
@@ -63,52 +74,157 @@ class DBManager:
 
 @app.route("/")
 def main():
-    return render_template('login.html')
+    url="main"
+    connectionAction="Se connecter"
+
+
+    return render_template('login.html',url=url,connection = connectionAction)
  
 
+msg = ""
+url = "main"
+connectionAction = "Se connecter"
+def setConnectedPage():
+    msg = 'Vous etes connectés '
+    url = "logout"
+    connectionAction = "Se deconnecter"
 
-conn = None
+def getConn():
+    conn = None
+
+
+    if not conn:
+        if (os.getenv('APP_ENV') == 'PROD'):
+            conn = DBManager(password_file='/run/secrets/db-password')
+        else:
+            conn = DBManagerDev()
+    return conn
 
 
 @app.route("/login", methods=['POST'])
 def login():
-    global conn
-    if not conn:
-        if(os.getenv('APP_ENV')=='PROD'):
-            conn = DBManager(password_file='/run/secrets/db-password')
+    global dbConnection
+    dbConnection = getConn()
+    msg = ''
+
+    if request.method == 'POST' and 'courriel' in request.form and 'motpasse' in request.form:
+        getConn().populate_db()
+        userEmail = '"'+request.form.get('courriel')+'"'
+        password = request.form.get('motpasse')
+        userNamne=""
+        cmd = 'SELECT password FROM users WHERE email=' + userEmail + ';'
+        dbConnection.cursor.execute(cmd)
+        userPasswordsRecords = []
+        for record in dbConnection.cursor:
+            userPasswordsRecords.append(record[0])
+
+
+        if (userPasswordsRecords != None) and (password == userPasswordsRecords[0]):
+            cmd = 'SELECT * FROM users WHERE email=' + userEmail + ';'
+            dbConnection.cursor.execute(cmd)
+            userRecords = []
+            for record in dbConnection.cursor:
+                userRecords.append(record)
+
+        if userRecords:
+            session['loggedin'] = True
+            session['email'] = userEmail
+            #session['username'] = account['username']
+            username = userRecords[0][3]
+            msg = 'Vous etes connectés '
+            url = "logout"
+            connectionAction = "Se deconnecter"
+            return render_template('bienvenu.html', loginMsg=msg,user=username,url = url,connection=connectionAction)
         else:
-            conn =DBManagerDev()
+            msg = 'Incorrect username / password !'
+    return render_template('login.html', loginMsg = msg)
 
-        conn.populate_db()
-    courriel = '"' + request.form.get('courriel') + '"'
-    passe = request.form.get('motpasse')
-
-
-    cmd = 'SELECT password FROM users WHERE email=' + courriel + ';'
-
-    conn.cursor.execute(cmd)
-    rec = []
-    for c in conn.cursor:
-        rec.append(c[0])
-    newPass =rec[0]
-
-    if (rec != None) and (passe == newPass):
-        cmd = 'SELECT * FROM users WHERE email=' + courriel + ';'
-        info = conn.cursor.execute(cmd)
-        userInfo=[]
-        for c in conn.cursor:
-            userInfo.append(c)
-
-        global ProfileUtilisateur
-        ProfileUtilisateur["courriel"] = courriel
-        ProfileUtilisateur["nom"] = userInfo[0][2]
-        ProfileUtilisateur["avatar"] = userInfo[0][3]
-        return render_template('bienvenu.html', profile=ProfileUtilisateur)
-
-    return render_template('login.html', message=newPass)
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('email', None)
 
 
+    return redirect(url_for('main'))
 
+@app.route('/register', methods =['GET', 'POST'])
+def register():
+    msg = ''
+    roleRecords=[]
+    cmd = 'SELECT id_role FROM Roles;'
+    dbConnection.cursor.execute(cmd)
+    for record in dbConnection.cursor:
+        roleRecords.append(record[0])
+
+    if request.method == 'POST'and 'firstname' in request.form and 'username' in request.form and \
+             'password' in request.form and 'email' in request.form and \
+             'city' in request.form and 'country' in request.form:
+        firstname = request.form['firstname']
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+
+        noCivique = request.form['noCivique']
+        city = request.form['city']
+        phone = request.form['phone']
+        rue = request.form['rue']
+        userRole = request.form['userRole']
+
+        country = request.form['country']
+        #dbConnection.cursor.execute('INSERT INTO Utilisateurs VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)', (username, firstname, email, phone, role, password, noCivique,rue,city,country ))
+
+        dbConnection.cursor.execute('SELECT courriel_utilisateur FROM Utilisateurs WHERE courriel_utilisateur = %s',(email,))
+        emailRecords = []
+        for record in dbConnection.cursor:
+             emailRecords.append(record[0])
+
+        if emailRecords:
+             msg = "L'utilsateur existe déjà"
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = "l'adresse est invalide !"
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            msg = 'le nom ne doit contenir que des lettres et des chiffres'
+        else:
+            dbConnection.cursor.execute('INSERT INTO Utilisateurs(nom_utilisateur,prenom_utilisateur,'
+                                        'courriel_utilisateur,telephone_utilisateur,role_utilisateur,'
+                                        'mot_de_passe,no_civique,rue,ville,pays)VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)',
+                                        (username, firstname, email, phone, userRole,
+                                         password, noCivique,rue,city,country ))
+            dbConnection.connection.commit()
+            msg = 'Vous etes bien enregistés'
+
+    elif request.method == 'POST':
+        msg = 'Remplir le formulaire'
+    return render_template('register.html', msg = msg,url=url,connection = connectionAction,roles=roleRecords)
+
+
+
+
+
+@app.route("/utilisateurs")
+def ajouter_utilisateur():
+    return render_template('utilisateurs.html')
+@app.route("/roles/ajouter",methods=['POST','GET'])
+def role():
+    if request.method == 'POST':
+
+
+        getConn().cursor.execute('INSERT INTO Roles(id_role,nom_role,desc_role) VALUES(%s,%s,%s);',(request.form['userRoleId'], request.form['userRoleName'],
+                                                              request.form['userRoleDesc']))
+        getConn().connection.commit()
+        return render_template('add_role.html',msg = msg,url=url,connection = connectionAction)
+    if request.method == 'GET':
+
+        return render_template('add_role.html',msg = msg,url=url,connection = connectionAction)
+
+
+@app.route("/roles")
+def listRole():
+    return render_template("roles.html",msg = msg,url=url,connection = connectionAction)
+@app.route("/accueil")
+def home():
+
+    return render_template('about.html',msg = msg,url=url,connection = connectionAction)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{% block title %} Accueil {% endblock %}</h1>
+    <div class="container text-center">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+            <div class="card  col mb-2 border border-0">
+                <h5 class="card-title">Gestion des roles</h5>
+                <div class=""><a href="{{ url_for('role') }}">Ajouter un nouveau role</a></div>
+            </div>
+            <div class="card col mb-2 border border-0">
+                <h5>Gestion des roles</h5>
+                <a href="{{ url_for('role') }}">Ajouter un nouveau role</a>
+            </div>
+            <div class="card col mb-2 border border-0">
+                <h5>Gestion des roles</h5>
+                <a href="{{ url_for('role') }}">Ajouter un nouveau role</a>
+            </div>
+            <div class="card col mb-2 border border-0">
+                <h5>Gestion des roles</h5>
+                <a href="{{ url_for('role') }}">Ajouter un nouveau role</a>
+            </div>
+            <div class="card col mb-2 border border-0">
+                <h5>Gestion des roles</h5>
+                <a href="{{ url_for('role') }}">Ajouter un nouveau role</a>
+            </div>
+            <div class="card col mb-2 border border-0">
+                <h5>Gestion des roles</h5>
+                <a href="{{ url_for('role') }}">Ajouter un nouveau role</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
